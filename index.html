@@ -36,7 +36,7 @@
   .mono { font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; }
   a { color: inherit; text-decoration: none; }
 
-  /* background grid texture */
+  /* Grid texture & glow */
   .bg-grid {
     position: fixed;
     inset: 0;
@@ -107,10 +107,12 @@
     font-size: 13.5px; font-weight: 500;
     padding: 12px 22px; border-radius: 7px;
     display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
   }
-  .btn-primary { background: var(--blue); color: #0d0e14; }
+  .btn-primary { background: var(--blue); color: #0d0e14; border: none; }
   .btn-primary:hover { background: #7b9dff; }
-  .btn-ghost { border: 1px solid var(--line); color: var(--text); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--text); background: transparent; }
   .btn-ghost:hover { border-color: var(--muted); }
 
   .terminal {
@@ -214,15 +216,35 @@
     text-align: center;
   }
   .contact-box h2 { font-size: 26px; font-weight: 600; margin-bottom: 12px; }
-  .contact-box p { color: var(--muted); font-size: 14.5px; max-width: 420px; margin: 0 auto 26px; }
-  .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .clink {
-    font-size: 13.5px; padding: 11px 20px; border-radius: 7px;
-    border: 1px solid var(--line);
-  }
-  .clink:hover { border-color: var(--blue); }
-  .clink.primary { background: var(--blue); color: #0d0e14; border-color: var(--blue); }
+  .contact-box p.contact-sub { color: var(--muted); font-size: 14.5px; max-width: 420px; margin: 0 auto 26px; }
 
+  /* Message de confirmation affiché après envoi */
+  .thank-you-box {
+    display: none;
+    max-width: 460px;
+    margin: 0 auto 28px;
+    padding: 28px 24px;
+    background: rgba(45, 212, 167, 0.08);
+    border: 1px solid rgba(45, 212, 167, 0.3);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .thank-you-box .check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(45, 212, 167, 0.15);
+    border-radius: 50%;
+    color: var(--green);
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+  .thank-you-box h3 { font-size: 20px; color: var(--text); font-weight: 600; margin-bottom: 8px; }
+  .thank-you-box p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* Formulaire */
   .contact-form { margin: 0 auto 24px; max-width: 440px; text-align: left; }
   .form-row { display: flex; gap: 10px; }
   .contact-form input, .contact-form textarea {
@@ -241,31 +263,15 @@
   .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--dim); }
   .contact-form input:focus, .contact-form textarea:focus { border-color: var(--blue); }
   .contact-form textarea { resize: vertical; }
-  .form-submit { width: 100%; justify-content: center; border: none; cursor: pointer; font-family: inherit; }
-  .contact-divider { color: var(--dim); font-size: 11px; margin: 6px 0 16px; }
+  .form-submit { width: 100%; justify-content: center; font-family: inherit; }
 
-  /* Message de statut après envoi */
-  .form-status {
-    display: none;
-    max-width: 440px;
-    margin: 0 auto 20px;
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 13.5px;
-    text-align: center;
+  .contact-divider { color: var(--dim); font-size: 11px; margin: 6px 0 16px; }
+  .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .clink {
+    font-size: 13.5px; padding: 11px 20px; border-radius: 7px;
+    border: 1px solid var(--line);
   }
-  .form-status.success {
-    display: block;
-    background: rgba(45, 212, 167, 0.1);
-    border: 1px solid rgba(45, 212, 167, 0.3);
-    color: var(--green);
-  }
-  .form-status.error {
-    display: block;
-    background: rgba(255, 95, 87, 0.1);
-    border: 1px solid rgba(255, 95, 87, 0.3);
-    color: #ff5f57;
-  }
+  .clink:hover { border-color: var(--blue); }
 
   footer { padding: 30px 0 50px; text-align: center; color: var(--dim); font-size: 12px; }
 
@@ -425,11 +431,16 @@
   <div class="wrap">
     <div class="contact-box">
       <h2>Travaillons ensemble</h2>
-      <p>Ouvert aux stages, projets ponctuels et collaborations. Remplis le formulaire, je réponds rapidement.</p>
+      <p class="contact-sub">Ouvert aux stages, projets ponctuels et collaborations. Remplis le formulaire, je réponds rapidement.</p>
 
-      <!-- Message dynamique après soumission -->
-      <div id="formStatus" class="form-status"></div>
+      <!-- Message de remerciement (s'affiche après envoi) -->
+      <div id="thankYouBox" class="thank-you-box">
+        <div class="check-icon">✓</div>
+        <h3>Merci pour votre message !</h3>
+        <p>Vos informations m'ont bien été transmises. Je vous recontacterai dans les plus brefs délais.</p>
+      </div>
 
+      <!-- Formulaire de contact -->
       <form id="contactForm" action="https://formspree.io/f/mkjnplqw" method="POST" class="contact-form">
         <div class="form-row">
           <input type="text" name="prenom" placeholder="Prénom" required>
@@ -458,18 +469,14 @@
 
 <script>
   const form = document.getElementById('contactForm');
-  const statusDiv = document.getElementById('formStatus');
+  const thankYouBox = document.getElementById('thankYouBox');
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const submitBtn = form.querySelector('.form-submit');
-    const originalText = submitBtn.textContent;
-    
-    // Changement de l'état du bouton pendant l'envoi
     submitBtn.textContent = 'Envoi en cours...';
     submitBtn.disabled = true;
-    statusDiv.className = 'form-status'; // Réinitialise les classes
 
     const data = new FormData(form);
 
@@ -483,18 +490,17 @@
       });
 
       if (response.ok) {
-        statusDiv.textContent = "Merci ! Votre message a été envoyé avec succès. Je vous répondrai très rapidement.";
-        statusDiv.classList.add('success');
-        form.reset();
+        // Cacher le formulaire et afficher le bloc de remerciement
+        form.style.display = 'none';
+        thankYouBox.style.display = 'block';
       } else {
-        statusDiv.textContent = "Oups ! Un problème est survenu lors de l'envoi. Veuillez réessayer.";
-        statusDiv.classList.add('error');
+        alert('Oups ! Une erreur est survenue lors de l\'envoi. Veuillez réessayer.');
+        submitBtn.textContent = 'Envoyer le message';
+        submitBtn.disabled = false;
       }
     } catch (error) {
-      statusDiv.textContent = "Erreur de connexion. Veuillez vérifier votre réseau et réessayer.";
-      statusDiv.classList.add('error');
-    } finally {
-      submitBtn.textContent = originalText;
+      alert('Erreur de connexion. Veuillez vérifier votre réseau et réessayer.');
+      submitBtn.textContent = 'Envoyer le message';
       submitBtn.disabled = false;
     }
   });
