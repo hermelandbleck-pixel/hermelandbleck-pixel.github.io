@@ -217,6 +217,27 @@
   .clink:hover { border-color: var(--blue); }
   .clink.primary { background: var(--blue); color: #0d0e14; border-color: var(--blue); }
 
+  .contact-form { margin: 0 auto 24px; max-width: 440px; text-align: left; }
+  .form-row { display: flex; gap: 10px; }
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13.5px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--dim); }
+  .contact-form input:focus, .contact-form textarea:focus { border-color: var(--blue); }
+  .contact-form textarea { resize: vertical; }
+  .form-submit { width: 100%; justify-content: center; border: none; cursor: pointer; font-family: inherit; }
+  .contact-divider { color: var(--dim); font-size: 11px; margin: 6px 0 16px; }
+
   footer { padding: 30px 0 50px; text-align: center; color: var(--dim); font-size: 12px; }
 
   @media (max-width: 720px) {
@@ -375,10 +396,23 @@
   <div class="wrap">
     <div class="contact-box">
       <h2>Travaillons ensemble</h2>
-      <p>Ouvert aux stages, projets ponctuels et collaborations. N'hésitez pas à me contacter — je réponds rapidement.</p>
+      <p>Ouvert aux stages, projets ponctuels et collaborations. Remplis le formulaire, je réponds rapidement.</p>
+
+      <form action="https://formspree.io/f/mkjnplqw" method="POST" class="contact-form">
+        <div class="form-row">
+          <input type="text" name="prenom" placeholder="Prénom" required>
+          <input type="text" name="nom" placeholder="Nom" required>
+        </div>
+        <input type="email" name="email" placeholder="Votre email" required>
+        <textarea name="message" placeholder="Votre message" rows="4" required></textarea>
+        <button type="submit" class="btn btn-primary form-submit">Envoyer le message</button>
+      </form>
+
+      <div class="contact-divider mono">— ou directement —</div>
       <div class="contact-links">
-        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=hermelandbleck@gmail.com" target="_blank" class="clink primary mono">hermelandbleck@gmail.com</a>
+        <a href="mailto:hermelandbleck@gmail.com" class="clink mono">hermelandbleck@gmail.com</a>
         <a href="tel:+22901919464" class="clink mono">+229 01 91 94 64 11</a>
+        <a href="https://wa.me/22901919464" target="_blank" class="clink mono">WhatsApp</a>
       </div>
     </div>
   </div>
