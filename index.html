@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TCHEOUBI Bleck — Développeur Web Junior</title>
+
+<!-- Chargement des polices Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
   :root {
     --bg: #0d0e14;
@@ -238,6 +244,29 @@
   .form-submit { width: 100%; justify-content: center; border: none; cursor: pointer; font-family: inherit; }
   .contact-divider { color: var(--dim); font-size: 11px; margin: 6px 0 16px; }
 
+  /* Message de statut après envoi */
+  .form-status {
+    display: none;
+    max-width: 440px;
+    margin: 0 auto 20px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    text-align: center;
+  }
+  .form-status.success {
+    display: block;
+    background: rgba(45, 212, 167, 0.1);
+    border: 1px solid rgba(45, 212, 167, 0.3);
+    color: var(--green);
+  }
+  .form-status.error {
+    display: block;
+    background: rgba(255, 95, 87, 0.1);
+    border: 1px solid rgba(255, 95, 87, 0.3);
+    color: #ff5f57;
+  }
+
   footer { padding: 30px 0 50px; text-align: center; color: var(--dim); font-size: 12px; }
 
   @media (max-width: 720px) {
@@ -398,7 +427,10 @@
       <h2>Travaillons ensemble</h2>
       <p>Ouvert aux stages, projets ponctuels et collaborations. Remplis le formulaire, je réponds rapidement.</p>
 
-      <form action="https://formspree.io/f/mkjnplqw" method="POST" class="contact-form">
+      <!-- Message dynamique après soumission -->
+      <div id="formStatus" class="form-status"></div>
+
+      <form id="contactForm" action="https://formspree.io/f/mkjnplqw" method="POST" class="contact-form">
         <div class="form-row">
           <input type="text" name="prenom" placeholder="Prénom" required>
           <input type="text" name="nom" placeholder="Nom" required>
@@ -411,8 +443,8 @@
       <div class="contact-divider mono">— ou directement —</div>
       <div class="contact-links">
         <a href="mailto:hermelandbleck@gmail.com" class="clink mono">hermelandbleck@gmail.com</a>
-        <a href="tel:+22901919464" class="clink mono">+229 01 91 94 64 11</a>
-        <a href="https://wa.me/22991946411" target="_blank" class="clink mono">WhatsApp</a>
+        <a href="tel:+2290191946411" class="clink mono">+229 01 91 94 64 11</a>
+        <a href="https://wa.me/2290191946411" target="_blank" rel="noopener noreferrer" class="clink mono">WhatsApp</a>
       </div>
     </div>
   </div>
@@ -423,6 +455,50 @@
     <span class="mono">© 2026 TCHEOUBI Bleck — construit avec passion.</span>
   </div>
 </footer>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const statusDiv = document.getElementById('formStatus');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = form.querySelector('.form-submit');
+    const originalText = submitBtn.textContent;
+    
+    // Changement de l'état du bouton pendant l'envoi
+    submitBtn.textContent = 'Envoi en cours...';
+    submitBtn.disabled = true;
+    statusDiv.className = 'form-status'; // Réinitialise les classes
+
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        statusDiv.textContent = "Merci ! Votre message a été envoyé avec succès. Je vous répondrai très rapidement.";
+        statusDiv.classList.add('success');
+        form.reset();
+      } else {
+        statusDiv.textContent = "Oups ! Un problème est survenu lors de l'envoi. Veuillez réessayer.";
+        statusDiv.classList.add('error');
+      }
+    } catch (error) {
+      statusDiv.textContent = "Erreur de connexion. Veuillez vérifier votre réseau et réessayer.";
+      statusDiv.classList.add('error');
+    } finally {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
+  });
+</script>
 
 </body>
 </html>
